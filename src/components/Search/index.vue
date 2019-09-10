@@ -3,13 +3,13 @@
     <div class="search_input">
       <div class="search_input_wrapper">
         <i class="iconfont icon-sousuo"></i>
-        <input type="text" />
+        <input type="text" v-model="message"><!--进行双向数据绑定-->
       </div>
     </div>
     <div class="search_result">
       <h3>电影/电视剧/综艺</h3>
       <ul>
-        <li>
+        <!-- <li>
           <div class="img">
             <img src="/images/movie_1.jpg" />
           </div>
@@ -22,19 +22,19 @@
             <p>剧情,喜剧,犯罪</p>
             <p>2018-11-16</p>
           </div>
-        </li>
-        <li>
+        </li> -->
+        <li v-for="item in moviesList" :key="item.id">
           <div class="img">
-            <img src="/images/movie_1.jpg" />
+            <img :src=" item.img | setWH('128.180')" >
           </div>
           <div class="info">
             <p>
-              <span>无名之辈</span>
-              <span>8.5</span>
+              <span>{{ item.nm }}</span>
+              <span>{{ item.sc }}</span>
             </p>
-            <p>A Cool Fish</p>
-            <p>剧情,喜剧,犯罪</p>
-            <p>2018-11-16</p>
+            <p>{{ item.enm }}</p>
+            <p>{{ item.cat }}</p>
+            <p>{{ item.rt }}</p>
           </div>
         </li>
       </ul>
@@ -44,8 +44,45 @@
 
 <script>
 export default {
-  name: "Search"
-};
+  name: "Search",
+  data(){
+    return {
+      message:'',
+      moviesList:[]
+    }
+  },
+  methods:{
+    cancelRequest(){//避免在输入框每次输入字母都得出检索结果，要在用户输入完毕再出结果
+      if(typeof this.source === 'function'){
+        this.source('终止请求')
+      }
+    }
+  },
+  watch:{//监听数据的变化进行同步
+    message(newVal){
+      var that=this;
+      this.cancelRequest()
+
+      this.axios.get('/api/searchList?cityId=10&kw='+newVal,{
+        cancelToken: new this.axios.CancelToken(function (c){//axios中检索资源的方法
+          that.source =c;
+        })
+      }).then((res)=>{
+        var msg=res.data.msg
+        var movies=res.data.data.movies
+        if(msg && movies){//判断搜索的结果
+          this.moviesList=res.data.data.movies.list
+        }
+      }).catch((err) => {
+        if(this.axios.isCancel(err)){
+          console.log('Requset canceled',err.message);//如果请i去取消，这里返回取消的message
+        }else {
+          console.log(err)
+        }
+      });
+    }
+  }
+}
 </script>
 
 <style scoped>
