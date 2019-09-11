@@ -14,6 +14,10 @@ Vue.filter('setWH',(url,arg)=>{
   return url.replace(/w\.h/,arg);
 });
 
+//引入下拉刷新组件
+import Scroller from '@/components/Scroller'
+Vue.component('Scroller',Scroller);
+
 Vue.config.productionTip = false
 
 new Vue({
