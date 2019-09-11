@@ -61,9 +61,10 @@ export default {
   watch:{//监听数据的变化进行同步
     message(newVal){
       var that=this;
+      var cityId=this.$store.state.city.id;
       this.cancelRequest()
 
-      this.axios.get('/api/searchList?cityId=10&kw='+newVal,{
+      this.axios.get('/api/searchList?cityId='+ cityId +'&kw='+newVal,{
         cancelToken: new this.axios.CancelToken(function (c){//axios中检索资源的方法
           that.source =c;
         })
