@@ -20,6 +20,8 @@
       </keep-alive>
     </div>
     <TabBar />
+    <!--利用命名视图展示页面-->
+    <router-view name = "detail" />
   </div>
 </template>
 

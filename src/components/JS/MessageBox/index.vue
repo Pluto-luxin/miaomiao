@@ -21,7 +21,7 @@ export default {
         height: 120px;
         border: 1px #ccc solid;
         border-radius: 4px;
-        background: white;
+        background-color: #e54847;
         box-shadow: 3px 3px 3px 3px  #ccc;
         position: absolute;
         left: 50%;
